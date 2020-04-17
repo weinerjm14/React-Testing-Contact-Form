@@ -1,9 +1,7 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import { render, fireEvent, getByLabelText } from "@testing-library/react";
 import App from "./App";
 import ContactForm from "./components/ContactForm";
-import { act } from "react-dom/test-utils";
 
 test("renders App without crashing", () => {
   render(<App />);
@@ -14,11 +12,11 @@ test("renders form", () => {
 });
 
 test("shows labels", () => {
-  const { getByText } = render(<App />);
-  const firstNameLabel = getByText(/first name/i);
-  const lastNameLabel = getByText(/last name/i);
-  const emailLabel = getByText(/email/i);
-  const textBoxLabel = getByText(/message/i);
+  const { getByLabelText } = render(<App />);
+  const firstNameLabel = getByLabelText(/first name/i);
+  const lastNameLabel = getByLabelText(/last name/i);
+  const emailLabel = getByLabelText(/email/i);
+  const textBoxLabel = getByLabelText(/message/i);
   expect(firstNameLabel).toBeVisible();
   expect(lastNameLabel).toBeVisible();
   expect(emailLabel).toBeVisible();
@@ -26,16 +24,23 @@ test("shows labels", () => {
 });
 
 test("button exist and work", () => {
-  const { getByTestId, getByText } = render(<ContactForm />);
+  const { getByTestId, getByLabelText } = render(<ContactForm />);
   const button = getByTestId("button");
-  const firstNameLabel = getByText(/first name/i);
-  const lastNameLabel = getByText(/last name/i);
-  const emailLabel = getByText(/email/i);
-  const textBoxLabel = getByText(/message/i);
-  act(() => {
-    fireEvent.change(firstNameLabel, { value: "Jennifer" });
-  });
+  const firstNameLabel = getByLabelText(/first name/i);
+  const lastNameLabel = getByLabelText(/last name/i);
+  const emailLabel = getByLabelText(/email/i);
+  const textBoxLabel = getByLabelText(/message/i);
+
+  fireEvent.change(firstNameLabel, { target: { value: "Jennifer" } });
+  fireEvent.change(lastNameLabel, { target: { value: "Weiner" } });
+  fireEvent.change(emailLabel, { target: { value: "me@me.com" } });
+  fireEvent.change(textBoxLabel, { target: { value: "test info" } });
   fireEvent.click(button);
+
   expect(firstNameLabel.value).toBe("Jennifer");
+  expect(lastNameLabel.value).toBe("Weiner");
+  expect(emailLabel.value).toBe("me@me.com");
+  expect(textBoxLabel.value).toBe("test info");
+
   expect(button).toBeVisible();
 });
