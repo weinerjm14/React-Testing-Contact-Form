@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 const ContactForm = () => {
   const [data, setData] = useState();
   const { register, errors, handleSubmit, reset } = useForm({
-    mode: "onBlur"
+    mode: "onBlur",
   });
   const onSubmit = data => {
     setData(data);
@@ -55,7 +55,7 @@ const ContactForm = () => {
             {JSON.stringify(data, null, 2)}
           </pre>
         )}
-        <input type="submit" />
+        <input type="submit" data-testid="button" />
       </form>
     </div>
   );
